@@ -1,0 +1,41 @@
+
+import { Component } from '@angular/core';
+import { CheckboxComponent } from '../../form/input/checkbox.component';
+import { InputFieldComponent } from '../../form/input/input-field.component';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+
+
+@Component({
+  standalone: true,
+  selector: 'app-signup-form',
+  imports: [
+    CheckboxComponent,
+    InputFieldComponent,
+    RouterModule,
+    FormsModule
+],
+  templateUrl: './signup-form.component.html',
+  styleUrls: ['./signup-form.component.css']})
+export class SignupFormComponent {
+
+  showPassword = false;
+  isChecked = false;
+
+  fname = '';
+  lname = '';
+  email = '';
+  password = '';
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  onSignIn() {
+    console.log('First Name:', this.fname);
+    console.log('Last Name:', this.lname);
+    console.log('Email:', this.email);
+    console.log('Password:', this.password);
+    console.log('Remember Me:', this.isChecked);
+  }
+}

@@ -1,0 +1,47 @@
+<div
+  class="relative min-h-screen overflow-hidden bg-cover bg-center bg-no-repeat"
+  style="background-image: url('/images/user/complain-login-page.png');"
+>
+
+  <!-- Light Overlay -->
+  <div class="absolute inset-0 bg-black/5"></div>
+
+  <!-- Main Wrapper -->
+  <div
+    class="relative z-10 flex items-center justify-center min-h-screen px-4 py-2"
+  >
+
+    <!-- Auth Container -->
+    <div
+      class="w-full max-w-sm mt-4"
+    >
+
+      <!-- Login Card -->
+      <div
+        class="relative overflow-hidden rounded-2xl bg-white/95 px-5 py-4 shadow-2xl backdrop-blur-sm dark:bg-gray-800/95"
+      >
+
+        <!-- Grid Shape -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+          <app-grid-shape />
+        </div>
+
+        <!-- Content -->
+        <div class="relative z-20 scale-[0.95]">
+
+          <ng-content></ng-content>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Theme Toggle -->
+  <div class="fixed bottom-3 right-3 z-50 hidden sm:block">
+    <app-theme-toggle-two />
+  </div>
+
+</div>

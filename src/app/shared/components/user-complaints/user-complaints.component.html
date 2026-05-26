@@ -1,0 +1,948 @@
+<div class="min-h-screen bg-gray-100 p-6"
+[ngClass]="darkMode ? 'dark bg-gray-900' : 'bg-gray-100'">
+
+  <!-- Page Header -->
+  <div class="mb-6 rounded-xl bg-white p-5 shadow-sm">
+
+    <h1 class="text-2xl font-bold text-gray-800">
+      DM Complaints Management
+    </h1>
+
+    <p class="mt-1 text-sm text-gray-500">
+      Register and manage public complaints easily.
+    </p>
+
+  </div>
+
+
+<div class="min-h-screen w-full bg-linear-to-br from-gray-100 via-blue-50 to-gray-100 p-4 md:p-6">
+
+  <div class="w-full space-y-6">
+
+    <!-- = STEPPER FIXED (FULL WIDTH) = -->
+    <div class="relative bg-white p-6 rounded-2xl shadow-md border w-full">
+
+      <div class="relative flex items-center justify-between w-full">
+
+        <!-- BACK LINE -->
+        <div class="absolute top-1/3 left-6 right-6 h-1 bg-gray-200 rounded-full -translate-y-1/2"></div>
+
+        <!-- PROGRESS LINE -->
+        <div
+          class="absolute top-1/3 left-6 h-1 bg-gradient-to-r from-blue-500 to-green-500 rounded-full -translate-y-1/2 transition-all duration-300"
+          [style.width.%]="(currentStep / (steps.length - 1)) * 100">
+        </div>
+
+        <!-- STEPS -->
+        <div
+          *ngFor="let step of steps; let i = index"
+          class="flex flex-col items-center flex-1 relative z-10"
+          (click)="setStep(i)">
+
+          <!-- CIRCLE -->
+          <div
+            class="w-11 h-11 flex items-center justify-center rounded-full font-bold shadow-md mx-auto transition-all duration-300"
+            [ngClass]="{
+              'bg-blue-600 text-white': step.status === 'active',
+              'bg-green-500 text-white': step.status === 'completed',
+              'bg-gray-300 text-gray-700': step.status === 'pending'
+            }">
+
+            <svg *ngIf="step.status === 'completed'"
+                 xmlns="http://www.w3.org/2000/svg"
+                 class="h-5 w-5"
+                 viewBox="0 0 20 20"
+                 fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M16.707 5.293a1 1 0 010 1.414l-7.07 7.07a1 1 0 01-1.414 0l-3.536-3.535a1 1 0 011.414-1.415l2.829 2.829 6.364-6.364a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+
+            <span *ngIf="step.status !== 'completed'">
+              {{ i + 1 }}
+            </span>
+
+          </div>
+
+          <!-- LABEL -->
+          <p class="mt-3 text-sm font-medium text-center"
+            [ngClass]="{
+              'text-blue-600': step.status === 'active',
+              'text-green-600': step.status === 'completed',
+              'text-gray-500': step.status === 'pending'
+            }">
+            {{ step.label }}
+          </p>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- = FORM = -->
+    <form [formGroup]="complaintForm" (ngSubmit)="submit()"
+      class="bg-white p-6 rounded-2xl shadow-md border space-y-6 w-full">
+
+      <!-- STEP 1 -->
+      <div *ngIf="currentStep === 0" class="space-y-4">
+
+        <h2 class="text-xl font-semibold">Complaint Registration</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+          <input class="border p-3 rounded-xl w-full" formControlName="fullName" placeholder="Full Name">
+          <input class="border p-3 rounded-xl w-full" formControlName="mobileNumber" placeholder="Mobile Number">
+          <input class="border p-3 rounded-xl w-full" formControlName="email" placeholder="Email">
+
+          <select
+            class="w-full border border-gray-200 p-3 rounded-xl bg-white text-gray-700"
+            formControlName="department">
+
+            <option value="">Select Department</option>
+            <option value="PWD">Public Works Department (PWD)</option>
+            <option value="JAL_NIGAM">Jal Nigam</option>
+            <option value="ELECTRICITY">Electricity</option>
+            <option value="POLICE">Police</option>
+            <option value="NAGAR_NIGAM">Nagar Nigam</option>
+            <option value="HEALTH">Health</option>
+            <option value="EDUCATION">Education</option>
+
+          </select>
+
+        </div>
+
+        <textarea class="border p-3 rounded-xl w-full"
+          formControlName="address"
+          placeholder="Address"></textarea>
+
+        <button type="button"
+          class="bg-blue-600 text-white px-5 py-2 rounded-xl"
+          (click)="setStep(1)">
+          Next
+        </button>
+
+      </div>
+
+<!-- STEP 2 : AI COMPLAINT PROCESSING -->
+
+
+<div *ngIf="currentStep === 1" class="space-y-6">
+
+ 
+  <!-- AI HEADER CARD -->
+ 
+
+  <div
+    class="relative overflow-hidden bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 rounded-3xl shadow-2xl p-8 text-white">
+
+    <!-- Background Blur -->
+    <div
+      class="absolute top-0 right-0 h-40 w-40 bg-white/10 rounded-full blur-3xl">
+    </div>
+
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
+      <!-- Left -->
+      <div class="space-y-3">
+
+        <div
+          class="inline-flex items-center gap-2 bg-white/20 px-4 py-1 rounded-full text-sm font-medium">
+
+          <span class="animate-pulse">⚡</span>
+          Smart AI Complaint Intelligence
+
+        </div>
+
+        <h2 class="text-3xl font-bold leading-tight">
+
+          AI Powered Complaint Analysis
+
+        </h2>
+
+        <p class="text-blue-100 text-sm md:text-base max-w-2xl leading-7">
+
+          The AI system will intelligently analyze complaint tone,
+          seriousness, contradictions, urgency level and automatically
+          map the complaint to the appropriate UP Government department.
+
+        </p>
+
+      </div>
+
+      <!-- Right -->
+      <div
+        class="h-24 w-24 rounded-3xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-2xl text-5xl">
+
+        🤖
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+  <!-- COMPLAINT INPUT CARD -->
+ 
+
+  <div class="bg-white rounded-3xl border border-gray-200 shadow-lg p-6">
+
+    <div class="flex items-center justify-between mb-6">
+
+      <div>
+
+        <h3 class="text-2xl font-bold text-gray-800">
+          Complaint Information
+        </h3>
+
+        <p class="text-gray-500 mt-1 text-sm">
+          Enter complete complaint details for AI evaluation
+        </p>
+
+      </div>
+
+      <div
+        class="h-14 w-14 rounded-2xl bg-purple-100 flex items-center justify-center text-2xl text-purple-700">
+
+        📝
+
+      </div>
+
+    </div>
+
+    <!-- SUBJECT -->
+     <div class="mb-5">
+
+      <label class="block text-sm font-semibold text-gray-700 mb-2">
+        Complaint Subject
+      </label>
+
+      <input
+        class="w-full rounded-2xl border border-gray-300 bg-gray-50 p-4 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+        formControlName="complaintSubject"
+        placeholder="Enter complaint subject">
+
+    </div> 
+
+    <!-- DETAILS -->
+    <div>
+
+      <label class="block text-sm font-semibold text-gray-700 mb-2">
+        Complaint Details
+      </label>
+
+      <textarea
+        rows="7"
+        class="w-full rounded-2xl border border-gray-300 bg-gray-50 p-4 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all"
+        formControlName="complaintDetails"
+        placeholder="Describe the complaint in detail"></textarea>
+
+    </div>
+
+    <!-- AI BUTTON -->
+    <div class="mt-7 flex flex-wrap gap-4">
+
+      <button
+        type="button"
+        (click)="processAI()"
+        [disabled]="isAiProcessing"
+        class="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 px-8 py-4 font-semibold text-white shadow-xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl disabled:opacity-50">
+
+        <span class="relative z-10 flex items-center gap-3">
+
+          <span *ngIf="!isAiProcessing">
+            🚀
+          </span>
+
+          <span *ngIf="isAiProcessing" class="animate-spin">
+            ⚙️
+          </span>
+
+          <span *ngIf="!isAiProcessing">
+            Process Complaint With AI
+          </span>
+
+          <span *ngIf="isAiProcessing">
+            AI Processing Running...
+          </span>
+
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+ 
+  <!-- AI PROCESSING CARD -->
+ 
+
+  <div
+    *ngIf="isAiProcessing"
+    class="overflow-hidden rounded-3xl border border-blue-200 bg-gradient-to-br from-blue-50 via-white to-indigo-50 shadow-xl">
+
+    <!-- Header -->
+    <div class="border-b border-blue-100 p-6">
+
+      <div class="flex items-center gap-4">
+
+        <div
+          class="flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-100 text-3xl animate-pulse">
+
+          ⚡
+
+        </div>
+
+        <div>
+
+          <h3 class="text-2xl font-bold text-blue-800">
+            AI Analysis Running
+          </h3>
+
+          <p class="mt-1 text-sm text-blue-600">
+            Please wait while the complaint is being analyzed...
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Processing Steps -->
+    <div class="space-y-5 p-6">
+
+      <div
+        class="flex items-center justify-between rounded-2xl border border-green-100 bg-green-50 p-4">
+
+        <div class="flex items-center gap-4">
+
+          <div
+            class="h-12 w-12 rounded-xl bg-green-100 flex items-center justify-center text-xl animate-pulse">
+            🧠
+          </div>
+
+          <div>
+            <h4 class="font-semibold text-green-800">
+              Language & Tone Analysis
+            </h4>
+
+            <p class="text-sm text-green-600">
+              Understanding complaint emotion and seriousness
+            </p>
+          </div>
+
+        </div>
+
+        <div class="text-green-600 animate-spin">
+          ⚙️
+        </div>
+
+      </div>
+
+      <div
+        class="flex items-center justify-between rounded-2xl border border-yellow-100 bg-yellow-50 p-4">
+
+        <div class="flex items-center gap-4">
+
+          <div
+            class="h-12 w-12 rounded-xl bg-yellow-100 flex items-center justify-center text-xl animate-pulse">
+            🚨
+          </div>
+
+          <div>
+            <h4 class="font-semibold text-yellow-800">
+              Severity & Priority Detection
+            </h4>
+
+            <p class="text-sm text-yellow-600">
+              Evaluating urgency and public impact
+            </p>
+          </div>
+
+        </div>
+
+        <div class="text-yellow-600 animate-spin">
+          ⚙️
+        </div>
+
+      </div>
+
+      <div
+        class="flex items-center justify-between rounded-2xl border border-red-100 bg-red-50 p-4">
+
+        <div class="flex items-center gap-4">
+
+          <div
+            class="h-12 w-12 rounded-xl bg-red-100 flex items-center justify-center text-xl animate-pulse">
+            🔍
+          </div>
+
+          <div>
+            <h4 class="font-semibold text-red-800">
+              Contradiction Validation
+            </h4>
+
+            <p class="text-sm text-red-600">
+              Checking complaint logical consistency
+            </p>
+          </div>
+
+        </div>
+
+        <div class="text-red-600 animate-spin">
+          ⚙️
+        </div>
+
+      </div>
+
+      <div
+        class="flex items-center justify-between rounded-2xl border border-purple-100 bg-purple-50 p-4">
+
+        <div class="flex items-center gap-4">
+
+          <div
+            class="h-12 w-12 rounded-xl bg-purple-100 flex items-center justify-center text-xl animate-pulse">
+            🏛️
+          </div>
+
+          <div>
+            <h4 class="font-semibold text-purple-800">
+              Department Classification
+            </h4>
+
+            <p class="text-sm text-purple-600">
+              Mapping complaint to government department
+            </p>
+          </div>
+
+        </div>
+
+        <div class="text-purple-600 animate-spin">
+          ⚙️
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+  <!-- AI RESULT CARD -->
+ 
+
+  <div
+    *ngIf="aiProcessed"
+    class="overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl">
+
+    <!-- Result Header -->
+    <div
+      class="bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-700 p-6 text-white">
+
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+
+        <div>
+
+          <div
+            class="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1 text-sm">
+
+            ✅ AI Analysis Completed
+
+          </div>
+
+          <h2 class="mt-3 text-3xl font-bold">
+            Complaint Analysis Report
+          </h2>
+
+          <p class="mt-2 text-blue-100">
+            Intelligent AI-based complaint evaluation generated successfully
+          </p>
+
+        </div>
+
+        <div
+          class="flex h-20 w-20 items-center justify-center rounded-3xl bg-white/20 text-5xl shadow-2xl">
+
+          📋
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Result Body -->
+    <div class="space-y-6 p-6">
+
+      <!-- STATS -->
+      <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+
+        <!-- Severity -->
+        <div
+          class="rounded-2xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-5 shadow-sm">
+
+          <div class="flex items-center justify-between">
+
+            <div>
+              <p class="text-sm font-semibold text-red-700">
+                Severity Score
+              </p>
+
+              <h3 class="mt-3 text-4xl font-bold text-red-600">
+                {{ severityScore }}/10
+              </h3>
+            </div>
+
+            <div
+              class="h-14 w-14 rounded-2xl bg-red-100 flex items-center justify-center text-2xl">
+              🚨
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Priority -->
+        <div
+          class="rounded-2xl border border-yellow-200 bg-gradient-to-br from-yellow-50 to-white p-5 shadow-sm">
+
+          <div class="flex items-center justify-between">
+
+            <div>
+              <p class="text-sm font-semibold text-yellow-700">
+                Priority Level
+              </p>
+
+              <h3 class="mt-3 text-3xl font-bold text-yellow-600">
+                {{ priority }}
+              </h3>
+            </div>
+
+            <div
+              class="h-14 w-14 rounded-2xl bg-yellow-100 flex items-center justify-center text-2xl">
+              ⚠️
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Department -->
+        <div
+          class="rounded-2xl border border-blue-200 bg-gradient-to-br from-blue-50 to-white p-5 shadow-sm">
+
+          <div class="flex items-center justify-between">
+
+            <div>
+              <p class="text-sm font-semibold text-blue-700">
+                Department
+              </p>
+
+              <h3 class="mt-3 text-2xl font-bold text-blue-600">
+                {{ aiDepartment }}
+              </h3>
+            </div>
+
+            <div
+              class="h-14 w-14 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl">
+              🏛️
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Confidence -->
+        <div
+          class="rounded-2xl border border-green-200 bg-gradient-to-br from-green-50 to-white p-5 shadow-sm">
+
+          <div class="flex items-center justify-between">
+
+            <div>
+              <p class="text-sm font-semibold text-green-700">
+                Confidence
+              </p>
+
+              <h3 class="mt-3 text-3xl font-bold text-green-600">
+                {{ confidenceScore }}%
+              </h3>
+            </div>
+
+            <div
+              class="h-14 w-14 rounded-2xl bg-green-100 flex items-center justify-center text-2xl">
+              📊
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Tone + Summary -->
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+        <!-- Tone -->
+        <div class="rounded-2xl border border-purple-200 bg-purple-50 p-6">
+
+          <div class="flex items-center gap-3 mb-4">
+
+            <div
+              class="h-12 w-12 rounded-xl bg-purple-100 flex items-center justify-center text-2xl">
+              🎭
+            </div>
+
+            <div>
+
+              <h3 class="text-xl font-bold text-purple-800">
+                Complaint Tone
+              </h3>
+
+              <p class="text-purple-600 text-sm">
+                Emotional and behavioral detection
+              </p>
+
+            </div>
+
+          </div>
+
+          <div
+            class="inline-flex rounded-full bg-purple-200 px-5 py-2 text-lg font-bold text-purple-800">
+
+            {{ complaintTone }}
+
+          </div>
+
+        </div>
+
+        <!-- Summary -->
+        <div class="rounded-2xl border border-gray-200 bg-gray-50 p-6">
+
+          <div class="flex items-center gap-3 mb-4">
+
+            <div
+              class="h-12 w-12 rounded-xl bg-gray-200 flex items-center justify-center text-2xl">
+              📑
+            </div>
+
+            <div>
+
+              <h3 class="text-xl font-bold text-gray-800">
+                Administrative Summary
+              </h3>
+
+              <p class="text-gray-500 text-sm">
+                AI generated official summary
+              </p>
+
+            </div>
+
+          </div>
+
+          <p class="leading-8 text-gray-700">
+            {{ administrativeSummary }}
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- Validation Alerts -->
+      <div class="space-y-4">
+
+        <!-- Contradiction -->
+        <div
+          *ngIf="isContradictory"
+          class="rounded-2xl border border-red-300 bg-red-50 p-5">
+
+          <div class="flex items-start gap-4">
+
+            <div
+              class="h-14 w-14 rounded-2xl bg-red-100 flex items-center justify-center text-3xl">
+              ⚠️
+            </div>
+
+            <div>
+
+              <h3 class="text-xl font-bold text-red-700">
+                Contradiction Detected
+              </h3>
+
+              <p class="mt-2 leading-7 text-red-600">
+                AI identified logical inconsistencies in the complaint.
+                Manual investigation is strongly recommended before taking
+                administrative action.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Manual Verification -->
+        <div
+          *ngIf="requiresManualVerification"
+          class="rounded-2xl border border-orange-300 bg-orange-50 p-5">
+
+          <div class="flex items-start gap-4">
+
+            <div
+              class="h-14 w-14 rounded-2xl bg-orange-100 flex items-center justify-center text-3xl">
+              🧐
+            </div>
+
+            <div>
+
+              <h3 class="text-xl font-bold text-orange-700">
+                Manual Verification Required
+              </h3>
+
+              <p class="mt-2 leading-7 text-orange-600">
+                Complaint should be reviewed by authorized DM Office staff
+                before escalation or departmental forwarding.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- AI Reason -->
+      <div
+        class="rounded-2xl border border-indigo-200 bg-indigo-50 p-6">
+
+        <div class="flex items-center gap-3 mb-4">
+
+          <div
+            class="h-12 w-12 rounded-xl bg-indigo-100 flex items-center justify-center text-2xl">
+            🧠
+          </div>
+
+          <div>
+
+            <h3 class="text-xl font-bold text-indigo-800">
+              AI Reasoning
+            </h3>
+
+            <p class="text-sm text-indigo-600">
+              Why the complaint received this classification
+            </p>
+
+          </div>
+
+        </div>
+
+        <p class="leading-8 text-indigo-700">
+          {{ reason }}
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ 
+  <!-- NAVIGATION -->
+ 
+
+  <div class="flex flex-wrap gap-4">
+
+    <button
+      type="button"
+      (click)="setStep(0)"
+      class="rounded-2xl bg-gray-200 px-6 py-4 font-semibold text-gray-700 transition-all hover:bg-gray-300">
+
+      ← Back
+
+    </button>
+
+    <button
+      type="button"
+      (click)="setStep(2)"
+      [disabled]="!aiProcessed"
+      class="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-4 font-semibold text-white shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50">
+
+      Continue →
+
+    </button>
+
+  </div>
+
+</div>
+
+      <!-- STEP 3 -->
+<!-- STEP 3 FILE CARD UI -->
+
+<div *ngIf="currentStep === 2" class="space-y-6">
+
+  <div>
+
+    <h2 class="text-2xl font-bold text-gray-800">
+      Documents Upload
+    </h2>
+
+    <p class="text-sm text-gray-500 mt-1">
+      Upload supporting documents, images or proofs
+    </p>
+
+  </div>
+
+  <!-- FILE CARD -->
+
+  <label
+    class="group relative flex cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-blue-300 bg-gradient-to-br from-blue-50 to-indigo-50 p-10 transition-all duration-300 hover:border-blue-500 hover:shadow-xl">
+
+    <!-- ICON -->
+
+    <div
+      class="mb-5 flex h-24 w-24 items-center justify-center rounded-3xl bg-white shadow-lg text-5xl transition-all group-hover:scale-105">
+
+      📂
+
+    </div>
+
+    <!-- TEXT -->
+
+    <h3 class="text-xl font-bold text-gray-800">
+
+      Upload Evidence File
+
+    </h3>
+
+    <p class="mt-2 text-center text-sm text-gray-500">
+
+      JPG, PNG, PDF supported <br>
+      Max Size 10MB
+
+    </p>
+
+    <!-- FILE NAME -->
+
+    <div
+      *ngIf="complaintForm.value.file"
+      class="mt-5 rounded-2xl bg-green-100 px-5 py-3 text-sm font-semibold text-green-700 shadow-sm">
+
+      ✅ {{ complaintForm.value.file?.name }}
+
+    </div>
+
+    <!-- IMAGE PREVIEW -->
+
+    <div
+      *ngIf="imagePreview"
+      class="mt-6 w-full max-w-md overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl">
+
+      <!-- PREVIEW HEADER -->
+
+      <div
+        class="flex items-center justify-between border-b bg-gray-50 px-5 py-3">
+
+        <h4 class="font-semibold text-gray-700">
+          Image Preview
+        </h4>
+
+        <span
+          class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+
+          Uploaded
+
+        </span>
+
+      </div>
+
+      <!-- IMAGE -->
+
+      <div class="p-4">
+
+        <img
+          [src]="imagePreview"
+          alt="Preview"
+          class="h-72 w-full rounded-2xl object-cover shadow-md">
+
+      </div>
+
+    </div>
+
+    <!-- PDF PREVIEW -->
+
+    <div
+      *ngIf="
+        complaintForm.value.file &&
+        complaintForm.value.file?.type === 'application/pdf'
+      "
+      class="mt-6 rounded-2xl bg-red-100 px-6 py-4 text-center text-red-700 font-semibold shadow">
+
+      📄 PDF File Selected
+
+    </div>
+
+    <!-- HIDDEN INPUT -->
+
+    <input
+      type="file"
+      class="hidden"
+      accept=".jpg,.jpeg,.png,.pdf"
+      (change)="onFileChange($event)">
+
+  </label>
+
+  <!-- ACTION BUTTONS -->
+
+  <div class="flex flex-wrap gap-4">
+
+    <button
+      type="button"
+      class="rounded-2xl bg-gray-300 px-6 py-3 font-semibold text-gray-700 transition-all hover:bg-gray-400"
+      (click)="setStep(1)">
+
+      ← Back
+
+    </button>
+
+    <button
+      type="button"
+      class="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-3 font-semibold text-white shadow-lg transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+      (click)="setStep(3)"
+      [disabled]="!complaintForm.value.file">
+
+      Continue →
+
+    </button>
+
+  </div>
+
+</div>
+
+      <!-- STEP 4 -->
+      <div *ngIf="currentStep === 3" class="space-y-4">
+
+        <h2 class="text-xl font-semibold">Submit Complaint</h2>
+
+        <p class="text-gray-500">Review and submit complaint to DM system</p>
+
+        <div class="flex gap-3">
+          <button type="button" class="bg-gray-300 px-4 py-2 rounded-xl" (click)="setStep(2)">
+            Back
+          </button>
+
+          <button type="submit"
+            class="bg-green-600 text-white px-6 py-2 rounded-xl"
+            [disabled]="!aiProcessed">
+            Submit Complaint
+          </button>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+</div>
+</div>

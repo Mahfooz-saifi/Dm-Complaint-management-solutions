@@ -1,0 +1,251 @@
+Complaint Listing
+<div class="mt-8 rounded-xl bg-white p-6 shadow-md">
+
+  <!-- Header -->
+  <div class="mb-5 flex items-center justify-between">
+
+    <h2 class="text-xl font-semibold text-gray-800">
+      AI Complaint Monitoring
+    </h2>
+
+    <span class="rounded-full bg-gray-100 px-4 py-1 text-sm font-medium text-gray-600">
+
+      Total Complaints :
+      {{ complaintsList.length }}
+
+    </span>
+
+  </div>
+
+  <!-- Empty State -->
+  @if (complaintsList.length === 0) {
+
+  <div class="rounded-lg border border-dashed border-gray-300 py-10 text-center">
+
+    <p class="text-sm text-gray-500">
+      No complaints available
+    </p>
+
+  </div>
+
+  }
+
+  <!-- Table -->
+  @if (complaintsList.length > 0) {
+
+  <div class="overflow-x-auto">
+
+    <table class="min-w-full overflow-hidden rounded-xl">
+
+      <!-- Head -->
+      <thead class="bg-gray-100">
+
+        <tr>
+
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700">
+            Sr No
+          </th>
+
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700">
+            Citizen
+          </th>
+
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700">
+            Subject
+          </th>
+
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700">
+            Department
+          </th>
+
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700">
+            AI Severity
+          </th>
+
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700">
+            Priority
+          </th>
+
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700">
+            Status
+          </th>
+
+          <th class="px-5 py-3 text-left text-sm font-semibold text-gray-700">
+            Date
+          </th>
+
+          <th class="px-5 py-3 text-center text-sm font-semibold text-gray-700">
+            Action
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <!-- Body -->
+      <tbody>
+
+        @for (
+        complaint of complaintsList;
+        track complaint;
+        let i = $index
+        ) {
+
+        <tr class="border-b border-gray-100 transition hover:bg-gray-50" [ngClass]="{
+            'bg-red-50':
+              complaint.severityScore >= 9
+          }">
+
+          <!-- Sr -->
+          <td class="px-5 py-4 text-sm text-gray-700">
+            {{ i + 1 }}
+          </td>
+
+          <!-- Citizen -->
+          <td class="px-5 py-4">
+
+            <div>
+
+              <h4 class="font-medium text-gray-800">
+                {{ complaint.fullName }}
+              </h4>
+
+              <p class="text-xs text-gray-500">
+                {{ complaint.mobileNumber }}
+              </p>
+
+            </div>
+
+          </td>
+
+          <!-- Subject -->
+          <td class="px-5 py-4 text-sm text-gray-700">
+            {{ complaint.complaintSubject }}
+          </td>
+
+          <!-- Department -->
+          <td class="px-5 py-4 text-sm text-blue-700">
+            {{ complaint.department }}
+          </td>
+
+          <!-- Severity -->
+          <td class="px-5 py-4">
+
+            <div class="flex items-center gap-3">
+
+              <!-- Circle -->
+              <div class="relative h-12 w-12">
+
+                <svg class="h-12 w-12 rotate-[-90deg]">
+
+                  <circle cx="24" cy="24" r="20" stroke="#E5E7EB" stroke-width="4" fill="none" />
+
+                  <circle cx="24" cy="24" r="20" stroke="#EF4444" stroke-width="4" fill="none" stroke-linecap="round"
+                    [attr.stroke-dasharray]="126" [attr.stroke-dashoffset]="
+                      126 -
+                      (126 *
+                        complaint.severityScore) /
+                        10
+                    " />
+
+                </svg>
+
+                <div class="absolute inset-0 flex items-center justify-center text-xs font-bold text-gray-700">
+                  {{ complaint.severityScore }}
+                </div>
+
+              </div>
+
+              <!-- Risk -->
+              <div>
+
+                @if (
+                complaint.severityScore >= 8
+                ) {
+
+                <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                  Critical
+                </span>
+
+                }
+
+                @if (
+                complaint.severityScore >=
+                5 &&
+                complaint.severityScore < 8 ) { <span
+                  class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700">
+                  Moderate
+                  </span>
+
+                  }
+
+                  @if (
+                  complaint.severityScore < 5 ) { <span
+                    class="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                    Low Risk
+                    </span>
+
+                    }
+
+              </div>
+
+            </div>
+
+          </td>
+
+          <!-- Priority -->
+          <td class="px-5 py-4">
+
+            <span class="rounded-full px-3 py-1 text-xs font-semibold" [ngClass]="
+                getPriorityClass(
+                  complaint.priority
+                )
+              ">
+
+              {{ complaint.priority }}
+
+            </span>
+
+          </td>
+
+          <!-- Status -->
+          <td class="px-5 py-4">
+
+            <span class="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+              {{ complaint.status }}
+            </span>
+
+          </td>
+
+          <!-- Date -->
+          <td class="px-5 py-4 text-sm text-gray-500">
+
+          {{ complaint.createdDate | date:'dd MMM yyyy':'UTC' }}
+
+          </td>
+
+          <!-- Action -->
+          <td class="px-5 py-4 text-center">
+
+            <button
+              class="rounded-lg bg-indigo-600 px-4 py-2 text-xs font-medium text-white transition hover:bg-indigo-700">
+              <!-- View -->
+
+              Track
+            </button>
+
+          </td>
+
+        </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  }
+
+</div>

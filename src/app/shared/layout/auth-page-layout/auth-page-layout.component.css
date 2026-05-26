@@ -1,0 +1,75 @@
+/* auth-layout.component.css */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Grid Shape Click Fix */
+app-grid-shape {
+  pointer-events: none;
+}
+
+/* Extra Compact Login Form */
+::ng-deep .form-input {
+  height: 32px !important;
+  min-height: 32px !important;
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  font-size: 13px !important;
+}
+
+/* Reduce Overall Form Gap */
+::ng-deep form {
+  gap: 8px !important;
+}
+
+/* Reduce Label Margin */
+::ng-deep app-label,
+::ng-deep label {
+  margin-bottom: 2px !important;
+  font-size: 13px !important;
+}
+
+/* Reduce Heading Size */
+::ng-deep h1 {
+  margin-bottom: 4px !important;
+  font-size: 28px !important;
+  line-height: 1.1 !important;
+}
+
+/* Reduce Paragraph Margin */
+::ng-deep p {
+  margin-bottom: 0 !important;
+  font-size: 12px !important;
+  line-height: 1.2 !important;
+}
+
+/* Reduce Button Height */
+::ng-deep button[type="submit"] {
+  height: 36px !important;
+  min-height: 36px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  font-size: 13px !important;
+}
+
+/* Reduce OAuth Button Height */
+::ng-deep .grid button {
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 10px !important;
+  font-size: 12px !important;
+}
+
+/* Reduce Checkbox Area */
+::ng-deep .flex.items-center.justify-between {
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
+}
+
+/* Reduce Entire Card Inner Space */
+::ng-deep .relative.z-20 {
+  transform: scale(0.90);
+  transform-origin: top center;
+}

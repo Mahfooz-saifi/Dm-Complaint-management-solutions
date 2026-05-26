@@ -1,0 +1,200 @@
+<!-- common-reusable-table.component.html -->
+
+<div
+  class="w-full rounded-2xl border border-gray-200  p-4 shadow-sm"
+  [ngClass]="{
+    'dark bg-gray-900 border-gray-700': darkMode
+  }"
+>
+
+  <!-- Header Section -->
+  <div
+    class="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+  >
+
+    <!-- Search -->
+    <input
+      type="text"
+      [(ngModel)]="searchText"
+      (input)="applyFilter()"
+      placeholder="Search..."
+      class="w-full md:w-72 rounded-lg border border-gray-300 px-4 py-2 text-sm outline-none transition
+      focus:border-blue-500 focus:ring-2 focus:ring-blue-100
+      dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+    />
+
+    <!-- Total Count -->
+    <span
+      class="rounded-full bg-gray-100 px-4 py-2 text-sm font-medium text-gray-600
+      dark:bg-gray-800 dark:text-gray-200"
+    >
+
+      Total Records :
+      {{ filteredData.length }}
+
+    </span>
+
+  </div>
+
+  <!-- Table Wrapper -->
+  <div
+    class="relative overflow-auto rounded-xl border border-gray-200 dark:border-gray-700 max-h-[500px]"
+  >
+
+    <table
+      class="min-w-full border-collapse bg-white dark:bg-gray-900"
+    >
+
+      <!-- Table Header -->
+      <thead
+        class="sticky top-0 z-50 bg-gray-100 dark:bg-gray-800"
+      >
+
+        <tr>
+
+          <th
+            *ngFor="let col of columns"
+            (click)="sort(col.key)"
+            class="cursor-pointer select-none whitespace-nowrap border-b border-gray-200 px-6 py-4 text-left text-sm font-semibold text-gray-700 transition
+            hover:bg-gray-200
+            dark:border-gray-700 dark:text-white dark:hover:bg-gray-700"
+          >
+
+            <div class="flex items-center gap-2">
+
+              {{ col.label }}
+
+              <!-- Sorting -->
+              <span
+                *ngIf="sortColumn === col.key"
+                class="text-xs"
+              >
+                {{ sortDirection === 'asc' ? '▲' : '▼' }}
+              </span>
+
+            </div>
+
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <!-- Table Body -->
+      <tbody
+        class="divide-y divide-gray-100 dark:divide-gray-700"
+      >
+
+        <tr
+          *ngFor="let row of paginatedData"
+          class="transition-all duration-200
+          hover:bg-slate-100
+          dark:hover:bg-gray-800"
+        >
+
+          <td
+            *ngFor="let col of columns"
+            class="whitespace-nowrap px-6 py-4 text-sm text-gray-700 dark:text-gray-200"
+          >
+
+            <!-- Dynamic Date -->
+            <ng-container
+              *ngIf="col.type === 'date'; else normalText"
+            >
+
+              {{
+                row[col.key]
+                  ? (row[col.key] | date:'dd MMM yyyy':'UTC')
+                  : '-'
+              }}
+
+            </ng-container>
+
+            <!-- Normal Text -->
+            <ng-template #normalText>
+
+              {{ row[col.key] }}
+
+            </ng-template>
+
+          </td>
+
+        </tr>
+
+        <!-- No Data -->
+        <tr *ngIf="paginatedData.length === 0">
+
+          <td
+            [attr.colspan]="columns.length"
+            class="py-10 text-center text-sm text-gray-500 dark:text-gray-400"
+          >
+
+            No Data Found
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+  <!-- Footer -->
+  <div
+    class="mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+  >
+
+    <!-- Count -->
+    <div
+      class="text-sm text-gray-600 dark:text-gray-300"
+    >
+
+      Showing
+      {{ startIndex + 1 }}
+      -
+      {{ endIndex }}
+      of
+      {{ filteredData.length }}
+
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center gap-2">
+
+      <button
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+        class="rounded-lg bg-gray-200 px-4 py-2 text-sm transition
+        hover:bg-gray-300 disabled:opacity-50
+        dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+      >
+        Prev
+      </button>
+
+      <span
+        class="text-sm font-medium dark:text-white"
+      >
+
+        Page {{ currentPage }}
+        /
+        {{ totalPages }}
+
+      </span>
+
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+        class="rounded-lg bg-gray-200 px-4 py-2 text-sm transition
+        hover:bg-gray-300 disabled:opacity-50
+        dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+      >
+        Next
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

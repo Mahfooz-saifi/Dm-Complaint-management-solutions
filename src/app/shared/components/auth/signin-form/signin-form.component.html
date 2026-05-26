@@ -1,0 +1,227 @@
+<!-- signin-form.component.html -->
+
+<div
+  class="login-bg relative min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-slate-100 via-slate-50 to-slate-200">
+
+  <!-- TOP BUTTONS -->
+  <div class="absolute right-6 top-6 z-50 flex items-center gap-3">
+
+    <!-- Login Button -->
+    <button
+      (click)="showLoginCard = true"
+      class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-700 shadow-sm transition duration-200 hover:bg-slate-100">
+
+      Login
+
+    </button>
+
+    <!-- Public User -->
+    <button
+      routerLink="/public-user"
+      class="rounded-lg bg-blue-600 px-4 py-2 text-xs font-medium text-white shadow-md transition duration-200 hover:bg-blue-700">
+
+      Public Login
+
+    </button>
+
+  </div>
+
+  <!-- LOGIN CARD -->
+
+  @if (showLoginCard) {
+
+  <div
+    class="relative w-80 max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-white/90 p-5 shadow-xl backdrop-blur-xl">
+
+    <!-- Glow -->
+    <div class="absolute -top-16 -right-16 h-28 w-28 rounded-full bg-slate-200/40 blur-3xl"></div>
+
+    <div class="absolute -bottom-16 -left-16 h-28 w-28 rounded-full bg-slate-300/30 blur-3xl"></div>
+
+    <div class="relative z-10">
+
+      <!-- Heading -->
+      <div class="mb-4 text-center">
+
+        <h1 class="text-2xl font-bold tracking-wide text-slate-900">
+          Sign In
+        </h1>
+
+        <p class="mt-1 text-xs text-slate-500">
+          Department Login Portal
+        </p>
+
+      </div>
+
+      <!-- FORM -->
+
+      <form
+        [formGroup]="loginForm"
+        (ngSubmit)="login()"
+        class="space-y-4">
+
+        <!-- USERNAME -->
+        <div>
+
+          <app-label>
+
+            <span class="text-sm text-slate-700">
+
+              Username
+
+            </span>
+
+            <span class="text-red-500">
+
+              *
+
+            </span>
+
+          </app-label>
+
+          <!-- TAILWIND INPUT -->
+          <input
+            type="text"
+            formControlName="userName"
+            placeholder="Enter username"
+            class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 outline-none transition-all duration-200 focus:border-slate-900 focus:ring-2 focus:ring-slate-200" />
+
+        </div>
+
+        <!-- PASSWORD -->
+        <div>
+
+          <app-label>
+
+            <span class="text-sm text-slate-700">
+
+              Password
+
+            </span>
+
+            <span class="text-red-500">
+
+              *
+
+            </span>
+
+          </app-label>
+
+          <div class="relative">
+
+            <!-- TAILWIND PASSWORD INPUT -->
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Enter password"
+              class="mt-1 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-12 text-sm text-slate-700 outline-none transition-all duration-200 focus:border-slate-900 focus:ring-2 focus:ring-slate-200" />
+
+            <!-- Toggle -->
+            <span
+              (click)="togglePasswordVisibility()"
+              class="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-sm text-slate-500">
+
+              @if (showPassword) {
+
+              👁️
+
+              } @else {
+
+              👁️‍🗨️
+
+              }
+
+            </span>
+
+          </div>
+
+        </div>
+
+        <!-- Remember -->
+        <div class="flex items-center justify-between text-xs">
+
+          <app-checkbox
+            [(checked)]="isChecked"
+            label="Remember" />
+
+          <a
+            routerLink="/reset-password"
+            class="text-slate-600 transition hover:text-slate-900">
+
+            Forgot?
+
+          </a>
+
+        </div>
+
+        <!-- ERROR -->
+        @if (errorMessage) {
+
+        <p class="text-xs text-red-500">
+
+          {{ errorMessage }}
+
+        </p>
+
+        }
+
+        <!-- SUBMIT -->
+        <button
+          type="submit"
+          [disabled]="isLoading"
+          class="w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition duration-200 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70">
+
+          @if (!isLoading) {
+
+          <span>
+
+            Sign In
+
+          </span>
+
+          } @else {
+
+          <div class="flex items-center justify-center gap-2">
+
+            <svg
+              class="h-4 w-4 animate-spin"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24">
+
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"></circle>
+
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+
+            </svg>
+
+            <span>
+
+              Signing In...
+
+            </span>
+
+          </div>
+
+          }
+
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>
